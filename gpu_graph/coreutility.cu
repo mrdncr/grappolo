@@ -83,7 +83,7 @@ float blockReduceFloat(float myCounter, unsigned int WARP_SIZE) {
     if (nrWarpInBlock <= PHY_WRP_SZ) {
         //warp reduce
         for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
-            myCounter += __shfl_xor(myCounter, i, WARP_SIZE);
+            myCounter += __shfl_xor_sync(0xFFFFFFFF, myCounter, i, WARP_SIZE);
         }
 
 
@@ -119,7 +119,7 @@ float blockReduceFloat(float myCounter, unsigned int WARP_SIZE) {
             myCounter = vmem[laneId];
 
         for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
-            myCounter += __shfl_xor(myCounter, i, WARP_SIZE);
+            myCounter += __shfl_xor_sync(0xFFFFFFFF, myCounter, i, WARP_SIZE);
         }
 
         toReturn = myCounter;
@@ -149,7 +149,7 @@ int blockReduce(int myCounter, unsigned int WARP_SIZE) {
     if (nrWarpInBlock <= PHY_WRP_SZ) {
         //warp reduce
         for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
-            myCounter += __shfl_xor(myCounter, i, WARP_SIZE);
+            myCounter += __shfl_xor_sync(0xFFFFFFFF, myCounter, i, WARP_SIZE);
         }
 
 
@@ -185,7 +185,7 @@ int blockReduce(int myCounter, unsigned int WARP_SIZE) {
             myCounter = vmem[laneId];
 
         for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
-            myCounter += __shfl_xor(myCounter, i, WARP_SIZE);
+            myCounter += __shfl_xor_sync(0xFFFFFFFF, myCounter, i, WARP_SIZE);
         }
 
         toReturn = myCounter;
@@ -236,7 +236,7 @@ float compute_weight_of_slef_loops_of_a_node(int node, int laneId, int nr_neigho
 
     for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
 
-        partial_weight_of_self_loop += __shfl_xor(partial_weight_of_self_loop, i, WARP_SIZE);
+        partial_weight_of_self_loop += __shfl_xor_sync(0xFFFFFFFF, partial_weight_of_self_loop, i, WARP_SIZE);
     }
 
     return partial_weight_of_self_loop;
@@ -290,7 +290,7 @@ float comWDegOfNode(int laneId, int nr_neighors, float* weights_of_links_to_neig
 
         for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
 
-            partialWdeg += __shfl_xor(partialWdeg, i, WARP_SIZE);
+            partialWdeg += __shfl_xor_sync(0xFFFFFFFF, partialWdeg, i, WARP_SIZE);
         }
 
         return partialWdeg;
@@ -480,8 +480,8 @@ void intraWarpBest(int &bestDestination, float &bestGain, unsigned int WARP_SIZE
 
     for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
 
-        float recvGain = __shfl_xor(bestGain, i, WARP_SIZE);
-        int recvDest = __shfl_xor(bestDestination, i, WARP_SIZE);
+        float recvGain = __shfl_xor_sync(0xFFFFFFFF, bestGain, i, WARP_SIZE);
+        int recvDest = __shfl_xor_sync(0xFFFFFFFF, bestDestination, i, WARP_SIZE);
 
         if ((recvGain > bestGain) || (recvGain == bestGain && recvDest < bestDestination)) {
 
@@ -514,7 +514,7 @@ int findPrimebyWarp(int* primes, int nrPrime, int threshold, unsigned int WARP_S
         }
     }
     for (unsigned int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
-        int received = __shfl_xor(myPrime, i, WARP_SIZE);
+        int received = __shfl_xor_sync(0xFFFFFFFF, myPrime, i, WARP_SIZE);
         if (received < myPrime)
             myPrime = received;
     }
@@ -819,7 +819,7 @@ void compute_neighboring_communites_using_Hash(int node, int laneId,
     //if ( !laneId)printf("\n node = %d sourceItem.cId= %d, sourceItem.gravity =%f \n",  node, sourceItem.cId, sourceItem.gravity);
     for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
 
-        selfLoop += __shfl_xor(selfLoop, i, WARP_SIZE);
+        selfLoop += __shfl_xor_sync(0xFFFFFFFF, selfLoop, i, WARP_SIZE);
     }
 
     //if(!laneId)printf("\n%d : %f sg\n", node, sourceItem.gravity);
@@ -828,8 +828,8 @@ void compute_neighboring_communites_using_Hash(int node, int laneId,
 
     for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
 
-        float recvGain = __shfl_xor(bestGain, i, WARP_SIZE);
-        int recvDest = __shfl_xor(bestDestination, i, WARP_SIZE);
+        float recvGain = __shfl_xor_sync(0xFFFFFFFF, bestGain, i, WARP_SIZE);
+        int recvDest = __shfl_xor_sync(0xFFFFFFFF, bestDestination, i, WARP_SIZE);
 
         if ((recvGain > bestGain) || (recvGain == bestGain && recvDest < bestDestination)) {
 
@@ -898,8 +898,8 @@ void compute_neighboring_communites_using_Hash(int node, int laneId,
 
     for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
 
-        float recvGain = __shfl_xor(bestGain, i, WARP_SIZE);
-        int recvDest = __shfl_xor(bestDestination, i, WARP_SIZE);
+        float recvGain = __shfl_xor_sync(0xFFFFFFFF, bestGain, i, WARP_SIZE);
+        int recvDest = __shfl_xor_sync(0xFFFFFFFF, bestDestination, i, WARP_SIZE);
 
         if ((recvGain > bestGain) || (recvGain == bestGain && recvDest < bestDestination)) {
             bestGain = recvGain;
@@ -953,7 +953,7 @@ void compute_neighboring_communites_using_Hash(int node, int laneId,
 
     }
 
-    *nr_moves = __shfl(*nr_moves, sourceLane, WARP_SIZE);
+    *nr_moves = __shfl_sync(0xFFFFFFFF, *nr_moves, sourceLane, WARP_SIZE);
 
     for (int j = laneId; j < bucketSize; j = j + WARP_SIZE) {
         shashTable[j].cId = 0;
@@ -1468,7 +1468,7 @@ void processNodesOfNewComm(HashItem* table, unsigned int* links, float* weights,
 
     for (int i = 1; i <= WARP_SIZE / 2; i *= 2) {
 
-        int lowerLaneValue = __shfl_up(myPosition, i, WARP_SIZE);
+        int lowerLaneValue = __shfl_up_sync(0xFFFFFFFF, myPosition, i, WARP_SIZE);
         if (laneId >= i)
             myPosition += lowerLaneValue;
     }
@@ -1542,7 +1542,7 @@ int blockPrefix(int nrDiscovered, unsigned int* nrNeighborsOfNewComms, int cId, 
         //Inclusive Scan ( intra-warp within warp) gives total inserted by a warp
         for (int i = 1; i <= WARP_SIZE / 2; i *= 2) {
 
-            int lowerLaneValue = __shfl_up(myPosition, i, WARP_SIZE);
+            int lowerLaneValue = __shfl_up_sync(0xFFFFFFFF, myPosition, i, WARP_SIZE);
             if (laneId >= i)
                 myPosition += lowerLaneValue;
         }
@@ -1581,7 +1581,7 @@ int blockPrefix(int nrDiscovered, unsigned int* nrNeighborsOfNewComms, int cId, 
 
         for (int i = 1; i <= WARP_SIZE / 2; i *= 2) {
 
-            int lowerLaneValue = __shfl_up(toAdd, i, WARP_SIZE);
+            int lowerLaneValue = __shfl_up_sync(0xFFFFFFFF, toAdd, i, WARP_SIZE);
 
             if (laneId >= i)
                 toAdd += lowerLaneValue;
@@ -1617,7 +1617,7 @@ int blockPrefix(int nrDiscovered, unsigned int* nrNeighborsOfNewComms, int cId, 
         unsigned int wId = threadIdx.x / WARP_SIZE;
 
         if (wId >= 1) {
-            myPosition = myPosition + __shfl(toAdd, (wId - 1), WARP_SIZE);
+            myPosition = myPosition + __shfl_sync(0xFFFFFFFF, toAdd, (wId - 1), WARP_SIZE);
         }
 
         myPosition = myPosition - nrDiscovered; //Exclusive scan
@@ -2243,7 +2243,7 @@ Tdata findMaxPerWarp(unsigned int laneId, unsigned int nrElements,
             maxElement = inputData[i];
     }
     for (unsigned int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
-        Tdata received = __shfl_xor(maxElement, i, WARP_SIZE);
+        Tdata received = __shfl_xor_sync(0xFFFFFFFF, maxElement, i, WARP_SIZE);
         if (received > maxElement)
             maxElement = received;
     }
@@ -2309,7 +2309,7 @@ void computeMaxDegreeForWarps(int * indices, int *maxDegreePerWarp,
 
         for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
 
-            uniDegCounter += __shfl_xor(uniDegCounter, i, WARP_SIZE);
+            uniDegCounter += __shfl_xor_sync(0xFFFFFFFF, uniDegCounter, i, WARP_SIZE);
         }
 
         if (!laneId)nrUniDegPerWarp[wid] = uniDegCounter;

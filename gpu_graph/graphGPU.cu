@@ -93,7 +93,7 @@ int pickMinimumColor(int laneId, int maxDegree, bool* available, unsigned int WA
     }
     //decide best
     for (int i = WARP_SIZE / 2; i >= 1; i = i / 2) {
-        float tempColor = __shfl_xor(minColor, i, WARP_SIZE);
+        float tempColor = __shfl_xor_sync(0xFFFFFFFF, minColor, i, WARP_SIZE);
 
         if (tempColor < minColor) {
             minColor = tempColor;
