@@ -18,7 +18,7 @@ set( GPUFOLDER_SRC
      ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/gatherInformation.cu
      ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/graphGPU.cu
      ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/independentKernels.cu
-     ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/preprocessing.cu
+     #     ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/preprocessing.cu
    )
 
 #CUDA_ADD_LIBRARY( gpu_graph 
@@ -30,9 +30,10 @@ set( GPUFOLDER_SRC
 CUDA_ADD_EXECUTABLE( gpu_graph 
   gpu_main.cpp
   ${GPUFOLDER_SRC}
-  #OPTIONS -arch sm_35
-  OPTIONS -arch sm_37
-  DEBUG -g -G
+  OPTIONS 
+  -gencode=arch=compute_60,code=sm_60
+  -gencode=arch=compute_80,code=sm_80
+  -Xcompiler -std=c++11
 )
 
 target_include_directories( gpu_graph 
