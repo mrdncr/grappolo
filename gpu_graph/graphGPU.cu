@@ -123,9 +123,9 @@ __global__ void coloringKernel(int* indices, unsigned int* links, int* colors,
 
 
     // local warp id
-    if (!laneId) {
+    //if (!laneId) {
         //printf(" @tid: %d \n", (wid * WARP_SIZE + laneId));
-    }
+    //}
 
 
 
@@ -170,34 +170,36 @@ __global__ void coloringKernel(int* indices, unsigned int* links, int* colors,
                 &links[start_of_neighbors], colors, &available[global_ptr],
                 false, WARP_SIZE);
 
-        if (!laneId && !wid) {
-            printf("v=%d:", node);
-            for (int k = 0; k <= maxDegree; k++) {
-                printf("%d  ", available[global_ptr + k]);
+        // if (!laneId && !wid) {
+        //     printf("v=%d:", node);
+        //     for (int k = 0; k <= maxDegree; k++) {
+        //         printf("%d  ", available[global_ptr + k]);
 
-            }
-            printf("\n");
-        }
+        //     }
+        //     printf("\n");
+        // }
+
         int minColor = pickMinimumColor(laneId, maxDegree, &available[global_ptr], WARP_SIZE);
 
         if (!laneId)
             colors[node] = minColor;
 
-        if (!laneId && !wid) {
-            printf("Picking %d\n", minColor);
-        }
+        // if (!laneId && !wid) {
+        //     printf("Picking %d\n", minColor);
+        // }
+
         //reset available array
         modify_available_array(laneId, (end_of_neighbors - start_of_neighbors),
                 &links[start_of_neighbors], colors, &available[global_ptr], true, WARP_SIZE);
 
 
-        if (!laneId && !wid) {
-            for (int k = 0; k <= maxDegree; k++) {
-                printf("%d  ", available[global_ptr + k]);
+        // if (!laneId && !wid) {
+        //     for (int k = 0; k <= maxDegree; k++) {
+        //         printf("%d  ", available[global_ptr + k]);
 
-            }
-            printf("\n");
-        }
+        //     }
+        //     printf("\n");
+        // }
 
     }
 }
@@ -238,11 +240,11 @@ void GraphGPU::greedyColoring(unsigned int WARP_SIZE) {
     thrust::fill_n(thrust::device, colors.begin(), colors.size(), -1);
 
 
-    if (hostPrint) {
-        std::cout << std::endl << "Color:" << std::endl;
-        thrust::copy(colors.begin(), colors.end(), std::ostream_iterator<int>(std::cout, " "));
-        std::cout << std::endl;
-    }
+    // if (hostPrint) {
+    //     std::cout << std::endl << "Color:" << std::endl;
+    //     thrust::copy(colors.begin(), colors.end(), std::ostream_iterator<int>(std::cout, " "));
+    //     std::cout << std::endl;
+    // }
 
     coloringKernel << < nr_of_block, NR_THREAD_PER_BLOCK, size_of_shared_memory >>>
             (thrust::raw_pointer_cast(indices.data()), thrust::raw_pointer_cast(links.data()),
@@ -251,9 +253,9 @@ void GraphGPU::greedyColoring(unsigned int WARP_SIZE) {
 
     cudaDeviceSynchronize();
 
-    if (hostPrint) {
-        std::cout << std::endl << "Color:" << std::endl;
-        thrust::copy(colors.begin(), colors.end(), std::ostream_iterator<int>(std::cout, " "));
-        std::cout << std::endl;
-    }
+    // if (hostPrint) {
+    //     std::cout << std::endl << "Color:" << std::endl;
+    //     thrust::copy(colors.begin(), colors.end(), std::ostream_iterator<int>(std::cout, " "));
+    //     std::cout << std::endl;
+    // }
 }
