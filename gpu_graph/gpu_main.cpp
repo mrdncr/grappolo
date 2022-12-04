@@ -199,7 +199,7 @@ int main(int argc, char** argv) {
     //binThreshold=threshold;
     //Copy Graph to Device
     Community dev_community(input_graph, -1, threshold);
-#if 1
+#if 0
     // Coloring code below
     unsigned int custom_warp_size = 32;
     dev_community.g.greedyColoring(custom_warp_size);

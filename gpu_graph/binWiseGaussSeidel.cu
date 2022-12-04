@@ -212,6 +212,9 @@ double Community::one_levelGaussSeidel(double init_mod, bool isLastRound,
 
 	thrust::copy_if(thrust::device, g_next.links.begin(), g_next.links.end(), sizesOfNhoods.begin(),
 			g_next.indices.begin() + nrCforBlkGMem + nrCforBlkSMem + nrCforWrp + nrC_N_leq32 + nrC_N_leq16 + nrC_N_leq8, filter_N_leq4);
+
+	thrust::copy_if(thrust::device, g_next.links.begin(), g_next.links.end(), sizesOfNhoods.begin(),
+			g_next.indices.begin() + nrCforBlkGMem + nrCforBlkSMem + nrCforWrp + nrC_N_leq32 + nrC_N_leq16 + nrC_N_leq8 + nrC_N_leq4, filterForNone);
 	///////////////////////////////////////////////////
 
 	// Now, use g_next.links to copy sizes of neighborhood according to order given by g_next.indices
