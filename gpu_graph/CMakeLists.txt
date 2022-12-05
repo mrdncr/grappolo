@@ -32,6 +32,8 @@ CUDA_ADD_EXECUTABLE( gpu_graph
   ${GPUFOLDER_SRC}
   OPTIONS 
   -gencode=arch=compute_60,code=sm_60
+  -gencode=arch=compute_70,code=sm_70
+  -gencode=arch=compute_75,code=sm_75
   -gencode=arch=compute_80,code=sm_80
   -Xcompiler -std=c++11
 )
