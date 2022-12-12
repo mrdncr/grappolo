@@ -34,7 +34,7 @@ option( OPTION_BUILD_EXAMPLES
         "Build examples."
         OFF )
 
-set( CMAKE_CXX_STANDARD 11 )
+set( CMAKE_CXX_STANDARD 17 )
 
 #set(CMAKE_C_COMPILER "gcc-8")
 #set(CMAKE_CXX_COMPILER "g++-8")
@@ -46,7 +46,7 @@ set( CMAKE_CXX_STANDARD 11 )
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
-    #set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 

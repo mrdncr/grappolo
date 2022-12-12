@@ -5,7 +5,7 @@ set( GPU_HEADERS
 )
 
 set( GPUFOLDER_SRC
-     #${CMAKE_SOURCE_DIR}/${GPUFOLDER}/gpu_main.cpp
+     ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/gpu_main.cpp
      ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/graphHOST.cpp
 
      ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/aggregateCommunity.cu
@@ -21,21 +21,13 @@ set( GPUFOLDER_SRC
      #     ${CMAKE_SOURCE_DIR}/${GPUFOLDER}/preprocessing.cu
    )
 
-#CUDA_ADD_LIBRARY( gpu_graph 
-#  SHARED
-#  ${GPUFOLDER_SRC}
-#  OPTIONS -arch sm_35
-#)
-
 CUDA_ADD_EXECUTABLE( gpu_graph 
-  gpu_main.cpp
   ${GPUFOLDER_SRC}
   OPTIONS 
   -gencode=arch=compute_60,code=sm_60
   -gencode=arch=compute_70,code=sm_70
   -gencode=arch=compute_75,code=sm_75
   -gencode=arch=compute_80,code=sm_80
-  -Xcompiler -std=c++11
 )
 
 target_include_directories( gpu_graph 
