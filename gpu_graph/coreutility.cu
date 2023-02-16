@@ -792,6 +792,8 @@ void compute_neighboring_communites_using_Hash(int node, int laneId,
 
         }
     }
+    
+    __syncwarp();
 
     //if (DUMP && node == 8)printf(" node = %d, laneId= %d , bestGain =%f wDeg= %f  bestDest= %d  n2c[node]= %d\n", node, laneId, bestGain, weighted_degree_of_node, bestDestination, n2c[node]);
 
